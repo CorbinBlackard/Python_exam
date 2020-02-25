@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Quotes</title>
+</head>
+<body>
+    <a href="/logged_out">Log Out</a>
+    <br>
+    <a href="/homepage">Back</a>
+    <h2>{{user.first_name}} {{user.last_name}}'s Quotes</h2>
+    {%for quotes in all_quotes %}
+        {% if quotes.user.id == user.id %}
+            <p>{{quotes.author}}: {{quotes.quote}}</p>
+        {% endif %}
+    {% endfor %}
+</body>
+</html>

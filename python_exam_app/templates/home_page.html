@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Dashboard</title>
+</head>
+<body>
+    <h1>Welcome {{all_users.first_name}} {{all_users.last_name}}!</h1>
+    <a href="/logged_out">Log Out</a>
+    <br>
+    <a href="/editPage">Edit My Profile</a>
+    <h2>Add a Quote!</h2>
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{message}}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <form action="/createQuote" method="POST">
+        {% csrf_token %}
+        <p>Author: <input type="text" name="author"></p>
+        <p>Quote: <input type="text" name="quote"></p>
+        <input type="submit" value="Submit">
+    </form>
+    <h2>Quotes</h2>
+    {% for quote in all_quotes %}
+        <p>{{quote.author}}: "{{quote.quote}}"</p>
+        <p>Posted by: <a href="/profile/{{quote.user.id}}">{{quote.user.first_name}} {{quote.user.last_name}}</a></p>
+        <p>{{quote.users_that_liked.count}} people like this</p>
+        {% if quote not in all_users.quotes_liked.all %}
+        <form action="/likeQuote/{{quote.id}}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Like">
+        </form>
+        {% endif %}
+        {% if quote in all_users.quotes_liked.all %}
+        <form action="/unlikeQuote/{{quote.id}}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Unlike">
+        </form>
+        {% endif %}
+        {% if quote.user == all_users %}
+            <form action="/delete/{{quote.id}}" method="POST">
+                {% csrf_token %}
+                <input type="submit" value="Delete">
+            </form>
+        {% endif %}
+    {% endfor %}
+
+</body>
+</html>
